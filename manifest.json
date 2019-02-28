@@ -11,6 +11,6 @@
 		"default_icon": "images/icon128.png",
 		"default_popup": "popup.html"},
 	"icons": {"128": "images/icon128.png"},
-	"permissions": ["https://www.crunchyroll.com/*","history","declarativeContent"]
+	"permissions": ["https://www.crunchyroll.com/*","history","declarativeContent","tabs"]
 
 }
