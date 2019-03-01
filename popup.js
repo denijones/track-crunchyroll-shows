@@ -5,7 +5,6 @@ let showList = [];
 //Store tab show and title
 let tabTitle, tabShow = "";
 
-
 /* Seperate show title and episode number into array
 Example: <title>JoJo's Bizarre Adventure: Golden Wind Episode 1 - Watch on Crunchyroll</title>
 0:"JoJo's Bizarre Adventure: Golden Wind", 1:"1" */
@@ -13,9 +12,18 @@ function splitTitle(title){
   return title.title.replace(" - Watch on Crunchyroll",'').split(' Episode');
 }
 
+chrome.tabs.query({active: true,currentWindow: true,url: "https://www.crunchyroll.com/*"}, function(tabs) {
+  if(tabs[0].title.includes('Episode')){
+    tabTitle = splitTitle(tabs[0]);
+    tabShow = tabTitle[0];
+  }else if(tabs[0].title.includes(' - Watch on Crunchyroll')){
+    tabShow = tabs[0].title.replace(" - Watch on Crunchyroll",'');
+  }
+})
+
 //Use history API to search for crunchyroll objects & limit search results
 chrome.history.search(
-  {text: "crunchyroll", maxResults: 5},
+  {text: "crunchyroll", maxResults: 100},
   //View the object results
   function(results){
     //Access each object
@@ -45,7 +53,7 @@ chrome.history.search(
           }
         }
       }
-
+          //Display last episode of current show
           for(let k in showList){
             if(tabShow === showList[k].show){
               //Add an item to the HTML page unordered list
@@ -56,19 +64,5 @@ chrome.history.search(
           }
 
   })
-
-
-chrome.tabs.query({active: true,currentWindow: true,url: "https://www.crunchyroll.com/*"}, function(tabs) {
-  //if(tabs.includes('Episode')){
-    tabTitle = splitTitle(tabs[0]);
-    tabShow = tabTitle[0];
-  /*}else{
-    tabShow = tabs[0].title.replace(" - Watch on Crunchyroll",'');
-  }*/
-})
-
-
-
-
 
 console.log(showList);
