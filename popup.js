@@ -1,9 +1,11 @@
 //Place episode history in a list
-let historyList = document.getElementById('historyList');
+let lastEpisode = document.getElementById('lastEpisodeHTML');
 //Array of objects to track shows and episodes visited
 let showList = [];
 //Store tab show and title
 let tabTitle, tabShow = "";
+
+let isShowPage = false;
 
 /* Seperate show title and episode number into array
 Example: <title>JoJo's Bizarre Adventure: Golden Wind Episode 1 - Watch on Crunchyroll</title>
@@ -49,20 +51,31 @@ chrome.history.search(
           }
           //If show isn't listed then add it in
           if(showPresent === false){
-            showList.push({show:showName,episodes:[episodeNum],last:episodeNum});
+            showList.push({show:showName,episodes:[episodeNum],last:episodeNum, link: results[i].url});
           }
         }
       }
-          //Display last episode of current show
+
+          let lastEpisodeList = document.createElement('li');
+          let lastEpisodeLink = document.createElement('a');
+
           for(let k in showList){
+            //Display last episode of current show
             if(tabShow === showList[k].show){
-              //Add an item to the HTML page unordered list
-              let histItem = document.createElement('li');
-              histItem.innerHTML = "Episode: " + showList[k].last;
-              historyList.appendChild(histItem);
+              //Add last episode link to the HTML page unordered list
+              lastEpisodeLink.href = showList[k].link;
+              lastEpisodeLink.innerHTML = showList[k].show + " - Episode: " + showList[k].last;
+              lastEpisode.appendChild(lastEpisodeList);
+              lastEpisodeList.appendChild(lastEpisodeLink);
             }
           }
 
   })
 
+  //Open last episode link in a new tab
+  window.addEventListener('click',function(e){
+    if(e.target.href!==undefined){
+      chrome.tabs.create({url:e.target.href})
+    }
+  })
 console.log(showList);
