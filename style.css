@@ -1,0 +1,39 @@
+body {
+  font-size: 12px;
+  font-weight: bold;
+  color: #df6300;
+  width: 400px;
+  height: 100px;
+  font-family: "Helvetica Neue",Arial,sans-serif;
+  display: inline-block;
+}
+
+a {
+  padding: 1em 1.5em;
+  text-decoration: none;
+}
+
+a:link, a:visited, a:active{
+  color: #363231;
+}
+
+a:hover {
+  color: #df6300;
+  cursor: pointer;
+}
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 16px;
+  text-align: center;
+}
+
+ul {
+
+}
