@@ -1,6 +1,5 @@
 body {
   font-size: 12px;
-  font-weight: bold;
   color: #df6300;
   width: 400px;
   height: 80px;
@@ -9,7 +8,6 @@ body {
 }
 
 a {
-  padding: 1em 1.5em;
   text-decoration: none;
 }
 
@@ -22,18 +20,42 @@ a:hover {
   cursor: pointer;
 }
 
-
 ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+  /* katakana list seemed relevant/aesthetically pleasing */
+  list-style-type: katakana;
+  margin: 20px;
+  padding-left: 0px;
+}
+
+#lastEpisodeHTML {
+    margin-top: 0px;
+    margin-right: 10px;
+    margin-left: 22px;
+
+}
+
+ul li {
+  padding:  4px;
 }
 
 h1 {
-  font-size: 16px;
+  font-size: 18px;
   text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
-ul {
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #df6300;
 }

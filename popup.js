@@ -7,12 +7,14 @@ let tabTitle, tabShow = "";
 //Check current tab page
 let isMainPage = false;
 let isShowPage = false;
+// Regex for shows that have the word 'Episode' in them
+const episodeRegex = / Episode/;
 
 /* Seperate show title and episode number into array
 Example: <title>JoJo's Bizarre Adventure: Golden Wind Episode 1 - Watch on Crunchyroll</title>
 0:"JoJo's Bizarre Adventure: Golden Wind", 1:"1" */
 function splitTitle(title){
-  return title.title.replace(" - Watch on Crunchyroll",'').split(' Episode');
+  return title.title.replace(" - Watch on Crunchyroll",'').split(episodeRegex);
 }
 
 // TODO: Refactor
@@ -20,7 +22,7 @@ function displayShow(showList,k){
   let lastEpisodeList = document.createElement('li');
   let lastEpisodeLink = document.createElement('a');
   lastEpisodeLink.href = showList[k].link;
-  lastEpisodeLink.innerHTML = showList[k].show + " - Episode: " + showList[k].last;
+  lastEpisodeLink.innerHTML = "<b>" + showList[k].show + "</b>" + " - Episode: " + "<b>" + showList[k].last + "</b>";
   lastEpisode.appendChild(lastEpisodeList);
   lastEpisodeList.appendChild(lastEpisodeLink);
 }
@@ -28,7 +30,7 @@ function displayShow(showList,k){
 // Use tabs API to get current tab information
 chrome.tabs.query({active: true,currentWindow: true,url: "https://www.crunchyroll.com/*"}, function(tabs) {
   // Get current tab's show information, to display last episode
-  if(tabs[0].title.includes('Episode')){
+  if(episodeRegex.test(tabs[0].title)){
     tabTitle = splitTitle(tabs[0]);
     tabShow = tabTitle[0];
   }else if(tabs[0].title.includes(' - Watch on Crunchyroll')){
@@ -49,7 +51,7 @@ chrome.history.search(
         let showName = "";
         let showPresent = false;
         //Find URL's only from crunchyroll and only the show episodes, not episode list page
-        if(results[i].url.includes('crunchyroll.com') && results[i].title.includes('Episode')){
+        if(results[i].url.includes('crunchyroll.com') && episodeRegex.test(results[i].title)){
           //Spilt the title for storing in object
           let splitEpisode = splitTitle(results[i]);
           //Change episode string number into int
