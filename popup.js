@@ -4,7 +4,8 @@ let lastEpisode = document.getElementById('lastEpisodeHTML');
 let showList = [];
 //Store tab show and title
 let tabTitle, tabShow = "";
-
+//Check current tab page
+let isMainPage = false;
 let isShowPage = false;
 
 /* Seperate show title and episode number into array
@@ -14,13 +15,27 @@ function splitTitle(title){
   return title.title.replace(" - Watch on Crunchyroll",'').split(' Episode');
 }
 
+// TODO: Refactor
+function displayShow(showList,k){
+  let lastEpisodeList = document.createElement('li');
+  let lastEpisodeLink = document.createElement('a');
+  lastEpisodeLink.href = showList[k].link;
+  lastEpisodeLink.innerHTML = showList[k].show + " - Episode: " + showList[k].last;
+  lastEpisode.appendChild(lastEpisodeList);
+  lastEpisodeList.appendChild(lastEpisodeLink);
+}
+
+// Use tabs API to get current tab information
 chrome.tabs.query({active: true,currentWindow: true,url: "https://www.crunchyroll.com/*"}, function(tabs) {
+  // Get current tab's show information, to display last episode
   if(tabs[0].title.includes('Episode')){
     tabTitle = splitTitle(tabs[0]);
     tabShow = tabTitle[0];
   }else if(tabs[0].title.includes(' - Watch on Crunchyroll')){
     tabShow = tabs[0].title.replace(" - Watch on Crunchyroll",'');
   }
+  // Check if this is the main show list page, to display list of shows watched
+  isMainPage = tabs[0].url === "https://www.crunchyroll.com/videos/anime";
 })
 
 //Use history API to search for crunchyroll objects & limit search results
@@ -55,18 +70,14 @@ chrome.history.search(
           }
         }
       }
-
-          let lastEpisodeList = document.createElement('li');
-          let lastEpisodeLink = document.createElement('a');
-
+          // TODO: Refactor and clean up
           for(let k in showList){
             //Display last episode of current show
             if(tabShow === showList[k].show){
               //Add last episode link to the HTML page unordered list
-              lastEpisodeLink.href = showList[k].link;
-              lastEpisodeLink.innerHTML = showList[k].show + " - Episode: " + showList[k].last;
-              lastEpisode.appendChild(lastEpisodeList);
-              lastEpisodeList.appendChild(lastEpisodeLink);
+              displayShow(showList,k);
+            }else if(isMainPage){
+              displayShow(showList,k);
             }
           }
 
@@ -78,4 +89,6 @@ chrome.history.search(
       chrome.tabs.create({url:e.target.href})
     }
   })
+
+// Check if working properly
 console.log(showList);
